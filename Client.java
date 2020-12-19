@@ -1,23 +1,35 @@
 import java.util.ArrayList;
 
-public class Client implements User{
+public class Client extends User{
 	protected float balance;
 	protected ArrayList<Game> library = new ArrayList<Game>();
 	
-	public Client(float balance, ArrayList<Game> library) {
+	public Client(float balance) {
 		super();
 		this.balance = balance;
-		this.library = library;
 	}
 	
 	public void buy_game(Game game) {
-		if(this.balance >= game.price) {
-			library.add(game);
-			this.balance = this.balance - game.price;
+		boolean contains = false;
+		for(int i = 0;i<library.size();i++) {
+			if(game.name.equals(library.get(i).name)) {
+				contains = true;
+			}
+		}
+		
+		if(contains == false) {
+			if(this.balance >= game.price) {
+				library.add(game);
+				this.balance = this.balance - game.price;
+			}
+			else {
+				System.out.println("ERROR");
+			}
 		}
 		else {
 			System.out.println("ERROR");
 		}
+
 	}
 	
 	public void refund_game(Game game) {
@@ -35,5 +47,20 @@ public class Client implements User{
 		}
 	}
 	
+	public void display_library() {
+		System.out.print("Library: [");
+		for(int i = 0;i<library.size();i++) {
+			if(i<library.size()-1) {
+				System.out.print(library.get(i).name+",");
+			}
+			else {
+				System.out.println(library.get(i).name+"]");
+			}
+
+		}
+	}
+
+
+
 	
 }

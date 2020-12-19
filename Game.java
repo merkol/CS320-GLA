@@ -5,6 +5,7 @@ public class Game{
     protected  float price;
     protected  float score;
     protected  boolean is_multi;
+    protected boolean mertGorduMu;
 
     public Game(String name,String description,String publisher,float price,float score,boolean is_multi){
         this.name=name;this.description=description;this.publisher=publisher; this.price=price; this.score=score;this.is_multi=is_multi;} 

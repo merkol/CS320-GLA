@@ -5,6 +5,8 @@ public class Game{
     protected  float price;
     protected  float score;
     protected  boolean is_multi;
+    protected  boolean is_refundable;
+        
     
     
     public Game(String name,String description,String publisher,float price,float score,boolean is_multi){

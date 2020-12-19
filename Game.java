@@ -5,7 +5,7 @@ public class Game{
     protected  float price;
     protected  float score;
     protected  boolean is_multi;
-    protected  boolean is_refundable;
+    
         
     
     

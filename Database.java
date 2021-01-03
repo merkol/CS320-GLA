@@ -567,7 +567,222 @@ public static int getMaxGid() {
 	}
 	
 	
-	
+	public static void deleteGameFromUser(int uid, int gid) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("DELETE FROM Game_Ownership WHERE uid=? AND gid=?;");
+			stmt.setInt(1, uid);
+			stmt.setInt(2, gid);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+
+	public static ArrayList<Integer> listAllGames() {
+		ArrayList<Integer> gids = new ArrayList<Integer>();
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT gid FROM Games;");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				gids.add(rs.getInt("gid"));
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return gids;
+	}
+
+
+
+	public static String getUsername(int uid) {
+		String result = "";
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT username FROM Users WHERE uid=?;");
+			stmt.setInt(1, uid);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				result = rs.getString("username");
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+
+
+	public static float getBalance(int uid) {
+		float result = 0;
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT balance FROM Users WHERE uid=?;");
+			stmt.setInt(1, uid);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				result = rs.getFloat("balance");
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+
+	public static String getDescription(int gid) {
+		String result = "";
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT description FROM Games WHERE gid=?;");
+			stmt.setInt(1, gid);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				result = rs.getString("description");
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+
+
+	public static float getPrice(int gid) {
+		float result = 0;
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT price FROM Games WHERE gid=?;");
+			stmt.setInt(1, gid);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				result = rs.getFloat("price");
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+
+	public static boolean getIsMulti(int gid) {
+		boolean result = false;
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT is_multi FROM Games WHERE gid=?;");
+			stmt.setInt(1, gid);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				result = rs.getBoolean("is_multi");
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+
+	public static int whoLoggedIn() {
+		int result = 0;
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT uid FROM Users WHERE logged_in=true;");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				result = rs.getInt("uid");
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+
+
+
+	public static int getMaxUid() {
+		int uid = 0;
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT MAX(uid) FROM Users;");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				uid = rs.getInt(1);
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return uid;
+	}
+
+
+
+
+	public static void addRandomGamesToUsers() {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("insert into Game_Ownership (uid, gid) values (?,?);");
+			PreparedStatement stmt2 = connection.prepareStatement("SELECT COUNT(*) FROM Users WHERE uid=?;");
+			PreparedStatement stmt3 = connection.prepareStatement("SELECT COUNT(*) FROM Games WHERE gid=?;");
+			PreparedStatement stmt4 = connection
+					.prepareStatement("SELECT COUNT(*) FROM Game_Ownership WHERE uid=? AND gid=?;");
+			int maxUid = getMaxUid();
+			int maxGid = getMaxGid();
+			Random rand = new Random();
+			boolean randomBool;
+			for (int i = 1; i <= maxUid; i++) {
+				boolean exists = false;
+				stmt2.setInt(1, i);
+				ResultSet rs = stmt2.executeQuery();
+				if (rs.next())
+					if (rs.getInt(1) > 0)
+						exists = true;
+				rs.close();
+				for (int j = 1; j <= maxGid; j++) {
+					boolean exists2 = false;
+					stmt3.setInt(1, j);
+					ResultSet rs2 = stmt3.executeQuery();
+					if (rs2.next())
+						if (rs2.getInt(1) > 0)
+							exists2 = true;
+					rs2.close();
+					boolean exists3 = false;
+					stmt4.setInt(1, i);
+					stmt4.setInt(2, j);
+					ResultSet rs3 = stmt4.executeQuery();
+					if (rs3.next())
+						if (rs3.getInt(1) > 0)
+							exists3 = true;
+					rs3.close();
+					randomBool = rand.nextBoolean();
+					if (randomBool && exists && exists2 && !exists3) {
+						stmt.setInt(1, i);
+						stmt.setInt(2, j);
+						stmt.executeUpdate();
+					}
+				}
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+}	
 	
 	
 	

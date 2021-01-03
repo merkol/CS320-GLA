@@ -269,3 +269,141 @@ private static boolean cond=true;
 			ex.printStackTrace();
 		}
 	}
+	
+	
+	public static boolean login(String username, String password) {
+		boolean exists = false;
+		try {
+			PreparedStatement stmt = connection
+					.prepareStatement("SELECT COUNT(*) FROM Users WHERE username=? AND password=?;");
+			stmt.setString(1, username);
+			stmt.setString(2, password);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next())
+				if (rs.getInt(1) > 0) {
+					exists = true;
+				}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return exists;
+	}
+
+
+public static ArrayList<Integer> listGamesOfUser(int uid) {
+		ArrayList<Integer> gids = new ArrayList<Integer>();
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT gid FROM Game_Ownership WHERE uid=?;");
+			stmt.setInt(1, uid);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				gids.add(rs.getInt("gid"));
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return gids;
+	}
+
+public static ArrayList<String> listAllUsersInfo() {
+		ArrayList<String> info = new ArrayList<String>();
+		try {
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Users;");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				info.add("" + rs.getInt("uid"));
+				info.add(rs.getString("username"));
+				info.add("" + rs.getString("description"));
+				info.add("" + rs.getFloat("balance"));
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return info;
+	}
+
+public static void setUsername(int uid, String username) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE Users SET username=? WHERE uid=?;");
+			stmt.setString(1, username);
+			stmt.setInt(2, uid);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+public static void setBalance(int uid, float balance) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE Users SET balance=? WHERE uid=?;");
+			stmt.setFloat(1, balance);
+			stmt.setInt(2, uid);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+
+public static void setDescription(int gid, String description) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE Games SET description=? WHERE gid=?;");
+			stmt.setString(1, description);
+			stmt.setInt(2, gid);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+public static void setPrice(int gid, float price) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE Games SET price=? WHERE gid=?;");
+			stmt.setFloat(1, price);
+			stmt.setInt(2, gid);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+public static void setIsMulti(int gid, boolean is_multi) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE Games SET is_multi=? WHERE gid=?;");
+			stmt.setBoolean(1, is_multi);
+			stmt.setInt(2, gid);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+public static void deleteGameWithName(String name) {
+		try {
+			PreparedStatement stmt = connection.prepareStatement("DELETE FROM Games WHERE name=?;");
+			stmt.setString(1, name);
+			stmt.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+public static int getMaxGid() {
+		int gid = 0;
+		try {
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT MAX(gid) FROM Games;");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				gid = rs.getInt(1);
+			}
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return gid;
+	}
+	}
+

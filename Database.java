@@ -389,7 +389,7 @@ public static void deleteGameWithName(String name) {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-
+}
 public static int getMaxGid() {
 		int gid = 0;
 		try {
@@ -782,7 +782,7 @@ public static int getMaxGid() {
 			ex.printStackTrace();
 		}
 	}
-}	
+	
 	
 	
 	
